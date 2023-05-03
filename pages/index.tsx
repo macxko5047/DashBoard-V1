@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { Inter } from "next/font/google";
 import type { NextApiRequest, NextApiResponse } from "next";
@@ -36,6 +37,7 @@ export default function Home({ datas }: any) {
 (BigInt.prototype as any).toJSON = function () {
   return this.toString();
 };
+
 export async function getServerSideProps(
   req: NextApiRequest,
   res: NextApiResponse
