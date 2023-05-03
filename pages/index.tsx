@@ -20,9 +20,10 @@ export default function Home({ datas }: any) {
               Work_order_id: string;
               PD_key: string;
               Item_number: string;
+              OK_qty: number;
             }) => (
               <li key={res.PD_key}>
-                {res.PD_key} {res.Work_order_id} {res.Item_number}
+                {res.PD_key} {res.Work_order_id} {res.Item_number} {res.OK_qty}
               </li>
             )
           )}
