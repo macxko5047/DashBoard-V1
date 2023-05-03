@@ -1,0 +1,210 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model BOM {
+  Item_number       String?
+  address           String?
+  master_part       String?
+  level             String?
+  line              BigInt?
+  qty_per           Decimal?  @db.Decimal
+  um                String?
+  p_m               String?
+  Production_unit   String?
+  run               Decimal?  @db.Decimal
+  cct_standard      Decimal?  @db.Decimal
+  wo_run            Decimal?  @db.Decimal
+  scrap_percent     Decimal?  @db.Decimal
+  boi_scrap_percent Decimal?  @db.Decimal
+  description       String?
+  starteff          DateTime? @db.Date
+  unit_group        String?
+  trans             String    @id
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model BOM_ract {
+  trans       String   @id
+  master_part String?
+  component   String?
+  s_t         String?
+  qty_per     Decimal? @db.Decimal
+  qtyoh       Decimal? @db.Decimal
+  poopen      Decimal? @db.Decimal
+  insqty      Decimal? @db.Decimal
+  allocd      Decimal? @db.Decimal
+  c_use       Decimal? @db.Decimal
+  vendor      String?
+  desc        String?
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model DownTimeCode {
+  process    String?
+  code       String  @id
+  desc_th    String?
+  desc_eng   String?
+  desc_china String?
+  desc_vn    String?
+  id         BigInt?
+}
+
+model Downtime_record {
+  Work_order_id           String?   @db.VarChar
+  PD_key                  String?   @db.VarChar
+  Downtime_code           String?   @db.VarChar
+  Downtime_description_th String?   @db.VarChar
+  Begin_time              String?   @db.VarChar
+  End_time                String?   @db.VarChar
+  Duration_downtime       Decimal?  @db.Decimal
+  Downtime_description_en String?
+  Downtime_description_cn String?
+  Downtime_description_vn String?
+  id                      BigInt    @id @default(autoincrement())
+  Date_record             DateTime? @db.Date
+}
+
+model Manpower_record {
+  PD_key          String?   @db.VarChar
+  emp_no          String?   @db.VarChar
+  start_datetime  DateTime? @db.Time(6)
+  end_datetime    DateTime? @db.Time(6)
+  emp_name        String?   @db.VarChar
+  id              BigInt    @id @default(autoincrement())
+  department      String?   @db.VarChar
+  task_time       Decimal?  @default(0) @db.Decimal
+  Work_order_id   String?   @db.VarChar
+  activate_data   String?   @db.VarChar
+  TimeStamp_start Decimal?  @db.Decimal
+  TimeStamp_end   Decimal?  @db.Decimal
+  eff_date        DateTime? @db.Date
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model NG_record {
+  Production_date   DateTime? @db.Date
+  Item_number       String?   @db.VarChar
+  Work_order_id     String?   @db.VarChar
+  NG_code           String?   @db.VarChar
+  NG_qty            Decimal?  @db.Decimal
+  Production_unit   String?   @db.VarChar
+  id                BigInt    @id @default(autoincrement())
+  PD_key            String?   @db.VarChar
+  NG_status         String?   @db.VarChar
+  NG_description_th String?   @db.VarChar
+  Part_name         String?   @db.VarChar
+  NG_description_en String?
+  NG_description_cn String?
+  NG_description_vn String?
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model NgCode {
+  id         BigInt  @id
+  process    String? @db.VarChar
+  code       String? @db.VarChar
+  desc_th    String? @db.VarChar
+  desc_eng   String? @db.VarChar
+  desc_china String? @db.VarChar
+  desc_vn    String? @db.VarChar
+}
+
+model PDU_multiply_manp {
+  Digit_group  String?
+  Default_manp Decimal? @db.Decimal
+  Group_name   String   @id
+}
+
+model Production_history {
+  Work_order_id        String?   @db.VarChar
+  Item_number          String?   @db.VarChar
+  Production_unit      String?   @db.VarChar
+  Production_date      DateTime? @db.Date
+  Shift                String?   @db.VarChar
+  Status               String?   @db.VarChar
+  Begin_time           DateTime? @db.Time(6)
+  End_time             DateTime? @db.Time(6)
+  Duration_time        Decimal?  @default(0) @db.Decimal
+  Runtime              Decimal?  @default(0) @db.Decimal
+  Standard_time        Decimal?  @default(0) @db.Decimal
+  LT_number            String?
+  Manpower_number      BigInt?   @default(0)
+  Order_qty            BigInt?   @default(0)
+  OK_qty               BigInt?   @default(0)
+  NG_qty               BigInt?   @default(0)
+  Cycle_time           Decimal?  @default(0) @db.Decimal
+  Availability_percent Float?    @default(0) @db.Real
+  Performance_percent  Decimal?  @db.Decimal
+  Quality_percent      Float?    @default(0) @db.Real
+  OEE_percent          Decimal?  @db.Decimal
+  OBU_status           String?   @default("Incomplete_data")
+  Open_qty             BigInt?
+  OP_confirm_before    String?   @db.VarChar
+  OP_confirm_after     String?   @db.VarChar
+  OT_operation         String?   @default("N") @db.VarChar
+  OT_duration          Decimal?  @default(0) @db.Decimal
+  Performance_permanp  Decimal?  @db.Decimal
+  NG_F_qty             Decimal?  @default(0) @db.Decimal
+  NG_C_qty             Decimal?  @default(0) @db.Decimal
+  PD_key               String    @id @db.VarChar
+}
+
+model Production_unit_group {
+  PD_line       String  @id @db.VarChar
+  Group_name    String? @db.VarChar
+  Digit_group   String? @db.VarChar
+  status_run    String? @default("Offline")
+  Work_order_id String?
+  PD_key        String?
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model Transaction_code {
+  transaction_code String  @id
+  detail           String?
+}
+
+model Work_order {
+  Work_order_id   String    @id @db.VarChar
+  Item_number     String?   @db.VarChar
+  WO_status       String?   @db.VarChar
+  Order_qty       Decimal?  @db.Decimal
+  Due_over        Decimal?  @db.Decimal
+  Complete_qty    Decimal?  @db.Decimal
+  Status_working  String?   @default("Offline")
+  Production_area String?   @db.VarChar
+  Open_qty        Decimal?  @db.Decimal
+  Order_date      DateTime? @db.Date
+  Release_date    DateTime? @db.Date
+  Due_date_PD     DateTime? @db.Date
+  Need_date       DateTime? @db.Date
+  Production_unit String?   @db.VarChar
+  Remarks         String?
+  NG_qty          Decimal?  @default(0) @db.Decimal
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model userID {
+  emp_no     String  @db.VarChar
+  emp_name   String? @db.VarChar
+  department String? @db.VarChar
+  pass       String? @db.VarChar
+  level      String? @db.VarChar
+  id         BigInt  @id @default(autoincrement())
+}
+
+model userSelect {
+  id            BigInt  @id @default(autoincrement())
+  emp_no        String? @db.VarChar
+  emp_name      String? @db.VarChar
+  department    String? @db.VarChar
+  Work_order_id String? @db.VarChar
+  activated     String? @db.VarChar
+}
