@@ -4,7 +4,23 @@ import { Inter } from "next/font/google";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
 import axios from "axios";
-const prisma = new PrismaClient();
+import { styled } from "@mui/material/styles";
+import Box from "@mui/material/Box";
+import Paper from "@mui/material/Paper";
+import Grid from "@mui/material/Grid";
+import Hearders from "./compoment/hearder";
+import ContentBody from "./compoment/contentbody";
+import Table_leder from "./compoment/table_leder";
+
+// const prisma = new PrismaClient();
+
+const Item = styled(Paper)(({ theme }) => ({
+  backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  textAlign: "center",
+  color: theme.palette.text.secondary,
+}));
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -32,65 +48,45 @@ export default function Home({ datas }: any) {
       }
     };
     FetchData();
-    setInterval(FetchData, 10000);
+    // setInterval(FetchData, 10000);
   }, []);
 
   return (
-    <main>
-      <div>
-        <p>Get started by editing&nbsp;</p>
-        <p>Get API Prisma 1&nbsp;</p>
+    <Box sx={{ flexGrow: 1 }}>
+      <Grid container spacing={1} padding={1}>
+        <Grid item xs={12}>
+          <Hearders />
+        </Grid>
 
-        <ul>
-          {dataAll.map(
-            (res: {
-              Work_order_id: string;
-              PD_key: string;
-              Item_number: string;
-              OK_qty: number;
-            }) => (
-              <li key={res.PD_key}>
-                {res.PD_key} {res.Work_order_id} {res.Item_number} {res.OK_qty}
-              </li>
-            )
-          )}
-        </ul>
-
-        <p>Get API Prisma 2.&nbsp;</p>
-
-        <ul>
-          {datas.map(
-            (res: {
-              Work_order_id: string;
-              PD_key: string;
-              Item_number: string;
-              OK_qty: number;
-            }) => (
-              <li key={res.PD_key}>
-                {res.PD_key} {res.Work_order_id} {res.Item_number} {res.OK_qty}
-              </li>
-            )
-          )}
-        </ul>
-      </div>
-    </main>
+        <Grid item xs={6}>
+          <Item>
+            <ContentBody />
+          </Item>
+        </Grid>
+        <Grid item xs={6}>
+          <Item sx={{ height: "100%" }}>
+            <Table_leder />
+          </Item>
+        </Grid>
+      </Grid>
+    </Box>
   );
 }
 
-(BigInt.prototype as any).toJSON = function () {
-  return this.toString();
-};
+// (BigInt.prototype as any).toJSON = function () {
+//   return this.toString();
+// };
 
-export async function getServerSideProps(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  // Fetch data from external API
-  const posts = await prisma.production_history.findMany();
-  console.log(posts);
+// export async function getServerSideProps(
+//   req: NextApiRequest,
+//   res: NextApiResponse
+// ) {
+//   // Fetch data from external API
+//   const posts = await prisma.production_history.findMany();
+//   console.log(posts);
 
-  const datas = JSON.parse(JSON.stringify(posts));
+//   const datas = JSON.parse(JSON.stringify(posts));
 
-  // Pass data to the page via props
-  return { props: { datas } };
-}
+//   // Pass data to the page via props
+//   return { props: { datas } };
+// }
